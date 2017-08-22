@@ -1,5 +1,5 @@
 import os,glob,time,math
-from temp import euclideanNorm,dotProduct
+from operations import euclideanNorm,dotProduct
 global currentDirABSPath
 currentDirABSPath=os.path.split(os.path.abspath(__file__))[0]
 def getFilesList(*fileExt,sourceFolder=currentDirABSPath,currentDirABSPath=(os.path.split(os.path.abspath(__file__))[0])):

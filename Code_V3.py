@@ -23,6 +23,21 @@ def getFilesList(*fileExt,sourceFolder=currentDirABSPath,currentDirABSPath=(os.p
         filesList.append(i)
         #filesList.extend(glob.glob(i))
     return filesList
+def getFilesList2(*fileExt,sourceFolderABSPath):
+    """
+    if no arguments are passed, the function considers currentDirABSPath as the source folder
+    """
+    sourceFolder=os.path.split(sourceFolderABSPath)[1]
+    stringtoGetTxts_List=[]
+    fileExt=(os.path.join(sourceFolder,"*") if len(fileExt)==0 else fileExt)
+    for i in fileExt:
+        temp=sourceFolderABSPath+os.sep+"*"+i
+        stringtoGetTxts_List.extend(glob.glob(temp))
+    print("stringtoGetTxts_List",stringtoGetTxts_List)
+    filesList=[]
+    for i in stringtoGetTxts_List:
+        filesList.append(i)
+    return filesList
 def printDict(d):
     print("\n",d)
     for i in d:
@@ -33,10 +48,12 @@ def getAbsFilepath(a):
 def getFilename(filepath):
     return os.path.split(filepath)[1]
 def getFreqDict(filePath,caseSensitive=False,ignoreSpecialChars=True):
-    ABSFilePath=getAbsFilepath(filePath)
+    #ABSFilePath=getAbsFilepath(filePath)
+    ABSFilePath=filePath
     try:
         file=open(ABSFilePath,"r")
         fileContents=file.read()
+        #print(fileContents)
         if not caseSensitive:
             fileContents=fileContents.lower()
         if ignoreSpecialChars:
@@ -52,6 +69,8 @@ def getFreqDict(filePath,caseSensitive=False,ignoreSpecialChars=True):
     except UnicodeDecodeError as e:
         print("\nThe program can't handle proprietary files.Skipping",getFilename(filePath),"\n")
         return -999
+    except:
+        print("Input Error")
         
 def getPlagiarismPercent(file1,file2):
     print("File1 : ",getFilename(file1))
@@ -61,9 +80,6 @@ def getPlagiarismPercent(file1,file2):
     eN1=euclideanNorm(dict1)
     eN2=euclideanNorm(dict2)
     dProduct=dotProduct(dict1,dict2)
-    #print(euclideanNorm(dict1))
-    #print(euclideanNorm(dict2))
-    #print(dProduct)
     theta=math.acos(dProduct/(eN1*eN2))
     theta=round(theta,2)
     #print("theta :",theta)
@@ -71,16 +87,12 @@ def getPlagiarismPercent(file1,file2):
     #print("MAX : ",MAX)
     print("Plagiarism Percent : %d"%((abs(theta-MAX)/MAX)*100))
     #print(theta)
-    print("Mentor Value:",dProduct/(eN1*eN2))
+    print("Mentor's Value:",dProduct/(eN1*eN2))
 if __name__=="__main__":
     currentDirABSPath=os.path.split(os.path.abspath(__file__))[0]
-    #print("os.getcwd()",os.getcwd())
     print("currentDirABSPath",currentDirABSPath)
-    #print(glob.glob(currentDirABSPath))
-    #print(getFilesList(".txt",sourceFolder="SourceFiles",currentDirABSPath=currentDirABSPath))
-    ##################
-    #extList=eval("Pls enter list of extensions you need to compare")
-    filesList=getFilesList(sourceFolder="SourceFiles")
+    #sourceFolder=input("Enter Folder Absolute Path")
+    filesList=getFilesList("txt",sourceFolder="SourceFiles")
     print("\nFList",filesList,"\n")
     filesFreqDicts={}
     for i in filesList:
@@ -89,7 +101,7 @@ if __name__=="__main__":
             print("Skipping...",i)
         else:
             filesFreqDicts[i]=temp
-    printDict(filesFreqDicts)
+    #printDict(filesFreqDicts)
     for i in filesFreqDicts:
         for j in filesFreqDicts:
             if j>i:
