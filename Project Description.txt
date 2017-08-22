@@ -1,0 +1,8 @@
+A python project to check plagiarism on text files[.txt].
+Environment:
+Windows 7 64 bit
+Python 3.6
+
+Author:
+Gurunath Reddy Kambala
+20176012
